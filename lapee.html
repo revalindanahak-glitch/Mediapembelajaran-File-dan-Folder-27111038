@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis dan Tugas: File dan Folder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 15px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        h2 {
+            color: #3498db;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        h3 {
+            color: #2980b9;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .options {
+            margin: 10px 0;
+        }
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #f0f8ff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #e1f0fa;
+        }
+        .option.selected {
+            background-color: #cce7ff;
+            border-left: 4px solid #3498db;
+        }
+        .correct {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .matching-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .matching-item {
+            padding: 10px;
+            margin: 5px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+        }
+        .matching-item.selected {
+            background-color: #cce7ff;
+        }
+        .drag-container {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+        .drag-item {
+            padding: 10px;
+            margin: 5px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+            cursor: move;
+        }
+        .drop-zone {
+            min-height: 50px;
+            border: 2px dashed #3498db;
+            border-radius: 4px;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .drop-zone.highlight {
+            background-color: #e1f0fa;
+        }
+        .task {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+        }
+        .task-instructions {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        .score {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .positive {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .negative {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Media Kuis dan Tugas: File dan Folder</h1>
+            <p>Modul Ajar Informatika - Kelas VII SMP</p>
+        </header>
+
+        <section class="section">
+            <h2>Kuis Pilihan Ganda</h2>
+            
+            <div class="question" id="q1">
+                <h3>1. Apa yang dimaksud dengan folder dalam sistem komputer?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this, 'q1')">A. Program yang digunakan untuk membuat dokumen</div>
+                    <div class="option" onclick="selectOption(this, 'q1')">B. Tempat penyimpanan elektronis untuk file atau folder lain</div>
+                    <div class="option" onclick="selectOption(this, 'q1')">C. Jenis file khusus yang berisi gambar</div>
+                    <div class="option" onclick="selectOption(this, 'q1')">D. Perangkat keras untuk menyimpan data</div>
+                </div>
+                <div class="feedback" id="feedback-q1"></div>
+            </div>
+            
+            <div class="question" id="q2">
+                <h3>2. Apa fungsi ekstensi file?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this, 'q2')">A. Menentukan ukuran file</div>
+                    <div class="option" onclick="selectOption(this, 'q2')">B. Menunjukkan program yang dapat membuka file tersebut</div>
+                    <div class="option" onclick="selectOption(this, 'q2')">C. Membuat file lebih aman</div>
+                    <div class="option" onclick="selectOption(this, 'q2')">D. Menentukan lokasi penyimpanan file</div>
+                </div>
+                <div class="feedback" id="feedback-q2"></div>
+            </div>
+            
+            <div class="question" id="q3">
+                <h3>3. Manakah dari berikut ini yang BUKAN merupakan cara untuk menyalin file di Windows?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this, 'q3')">A. Menggunakan kombinasi tombol Ctrl+C dan Ctrl+V</div>
+                    <div class="option" onclick="selectOption(this, 'q3')">B. Klik kanan, pilih Copy, lalu Paste</div>
+                    <div class="option" onclick="selectOption(this, 'q3')">C. Drag file sambil menekan tombol Shift</div>
+                    <div class="option" onclick="selectOption(this, 'q3')">D. Menggunakan menu Home, tombol Copy dan Paste</div>
+                </div>
+                <div class="feedback" id="feedback-q3"></div>
+            </div>
+            
+            <button onclick="checkMultipleChoice()">Periksa Jawaban Pilihan Ganda</button>
+            <div class="result" id="mc-result"></div>
+        </section>
+
+        <section class="section">
+            <h2>Tugas Menjodohkan</h2>
+            <p>Pasangkan istilah di kolom kiri dengan definisi yang tepat di kolom kanan.</p>
+            
+            <div class="matching-container">
+                <div>
+                    <div class="matching-item" onclick="selectMatching(this, 'left')">Folder</div>
+                    <div class="matching-item" onclick="selectMatching(this, 'left')">File</div>
+                    <div class="matching-item" onclick="selectMatching(this, 'left')">Ekstensi File</div>
+                </div>
+                <div>
+                    <div class="matching-item" onclick="selectMatching(this, 'right')">Tempat penyimpanan elektronis yang menyimpan file atau folder lain</div>
+                    <div class="matching-item" onclick="selectMatching(this, 'right')">Unit penyimpanan di komputer yang akan dibaca atau ditulis</div>
+                    <div class="matching-item" onclick="selectMatching(this, 'right')">Nama pendek setelah tanda titik di akhir nama file</div>
+                </div>
+            </div>
+            
+            <button onclick="checkMatching()">Periksa Penjodohan</button>
+            <div class="result" id="matching-result"></div>
+        </section>
+
+        <section class="section">
+            <h2>Tugas Drag and Drop</h2>
+            <p>Urutkan langkah-langkah berikut dengan cara drag and drop:</p>
+            
+            <div class="drag-container">
+                <div class="drag-item" draggable="true" ondragstart="dragStart(event)">Klik Kanan</div>
+                <div class="drag-item" draggable="true" ondragstart="dragStart(event)">Pilih New</div>
+                <div class="drag-item" draggable="true" ondragstart="dragStart(event)">Pilih Folder</div>
+            </div>
+            
+            <p>Urutan langkah membuat folder:</p>
+            <div class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+                Drop langkah-langkah di sini
+            </div>
+            
+            <button onclick="checkDragDrop()">Periksa Urutan</button>
+            <div class="result" id="dragdrop-result"></div>
+        </section>
+
+        <section class="section">
+            <h2>Tugas Praktik</h2>
+            
+            <div class="task">
+                <div class="task-instructions">1. Jelaskan perbedaan antara file dan folder!</div>
+                <textarea id="answer1" placeholder="Tulis jawaban Anda di sini..."></textarea>
+            </div>
+            
+            <div class="task">
+                <div class="task-instructions">2. Sebutkan 3 cara untuk menyalin file di sistem operasi Windows!</div>
+                <textarea id="answer2" placeholder="Tulis jawaban Anda di sini..."></textarea>
+            </div>
+            
+            <div class="task">
+                <div class="task-instructions">3. Mengapa pengelolaan file dan folder yang terstruktur penting dalam penggunaan komputer?</div>
+                <textarea id="answer3" placeholder="Tulis jawaban Anda di sini..."></textarea>
+            </div>
+            
+            <button onclick="checkTasks()">Periksa Tugas Praktik</button>
+            <div class="result" id="tasks-result"></div>
+        </section>
+
+        <section class="section">
+            <h2>Kuis Mengenal Ekstensi File</h2>
+            <p>Pasangkan file dengan jenisnya berdasarkan ekstensi file:</p>
+            
+            <div class="matching-container">
+                <div>
+                    <div class="matching-item" onclick="selectFileType(this, 'left')">Tugas1.doc</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'left')">Tugas1.xls</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'left')">Tugas1.ppt</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'left')">Tugas1.pdf</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'left')">Tugas1.jpg</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'left')">Tugas.mp4</div>
+                </div>
+                <div>
+                    <div class="matching-item" onclick="selectFileType(this, 'right')">File Presentasi</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'right')">File Gambar</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'right')">File Video</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'right')">File Dokumen Word</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'right')">File Spreadsheet Excel</div>
+                    <div class="matching-item" onclick="selectFileType(this, 'right')">File Dokumen Portable</div>
+                </div>
+            </div>
+            
+            <button onclick="checkFileTypes()">Periksa Jawaban</button>
+            <div class="result" id="filetype-result"></div>
+        </section>
+
+        <section class="section">
+            <h2>Hasil Akhir</h2>
+            <button onclick="calculateFinalScore()">Hitung Nilai Akhir</button>
+            <div class="result" id="final-result"></div>
+        </section>
+    </div>
+
+    <script>
+        // Jawaban benar untuk kuis pilihan ganda
+        const correctAnswers = {
+            q1: 'B. Tempat penyimpanan elektronis untuk file atau folder lain',
+            q2: 'B. Menunjukkan program yang dapat membuka file tersebut',
+            q3: 'C. Drag file sambil menekan tombol Shift'
+        };
+
+        // Jawaban benar untuk tugas menjodohkan
+        const correctMatches = {
+            'Folder': 'Tempat penyimpanan elektronis yang menyimpan file atau folder lain',
+            'File': 'Unit penyimpanan di komputer yang akan dibaca atau ditulis',
+            'Ekstensi File': 'Nama pendek setelah tanda titik di akhir nama file'
+        };
+
+        // Jawaban benar untuk tugas drag and drop
+        const correctOrder = ['Klik Kanan', 'Pilih New', 'Pilih Folder'];
+
+        // Jawaban benar untuk kuis ekstensi file
+        const correctFileTypes = {
+            'Tugas1.doc': 'File Dokumen Word',
+            'Tugas1.xls': 'File Spreadsheet Excel',
+            'Tugas1.ppt': 'File Presentasi',
+            'Tugas1.pdf': 'File Dokumen Portable',
+            'Tugas1.jpg': 'File Gambar',
+            'Tugas.mp4': 'File Video'
+        };
+
+        // Variabel untuk menyimpan pilihan user
+        let selectedOptions = {};
+        let selectedLeft = null;
+        let selectedRight = null;
+        let selectedFileLeft = null;
+        let selectedFileRight = null;
+        let matches = {};
+        let fileMatches = {};
+        let dragOrder = [];
+
+        // Fungsi untuk memilih opsi pada pertanyaan pilihan ganda
+        function selectOption(element, questionId) {
+            // Hapus seleksi sebelumnya pada pertanyaan yang sama
+            const options = element.parentElement.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Tandai opsi yang dipilih
+            element.classList.add('selected');
+            selectedOptions[questionId] = element.textContent;
+            
+            // Sembunyikan feedback sebelumnya
+            document.getElementById(`feedback-${questionId}`).style.display = 'none';
+        }
+
+        // Fungsi untuk memeriksa jawaban pilihan ganda
+        function checkMultipleChoice() {
+            let score = 0;
+            let total = Object.keys(correctAnswers).length;
+            
+            for (const questionId in correctAnswers) {
+                const userAnswer = selectedOptions[questionId];
+                const correctAnswer = correctAnswers[questionId];
+                const feedbackElement = document.getElementById(`feedback-${questionId}`);
+                
+                if (userAnswer === correctAnswer) {
+                    score++;
+                    feedbackElement.textContent = "Jawaban Anda benar!";
+                    feedbackElement.className = "feedback positive";
+                } else {
+                    feedbackElement.textContent = `Jawaban Anda salah. Jawaban yang benar: ${correctAnswer}`;
+                    feedbackElement.className = "feedback negative";
+                }
+                feedbackElement.style.display = 'block';
+            }
+            
+            const resultElement = document.getElementById('mc-result');
+            resultElement.textContent = `Nilai Kuis Pilihan Ganda: ${score}/${total}`;
+            resultElement.className = score === total ? "result success" : "result warning";
+            resultElement.style.display = 'block';
+        }
+
+        // Fungsi untuk memilih item pada tugas menjodohkan
+        function selectMatching(element, side) {
+            if (side === 'left') {
+                // Hapus seleksi sebelumnya di kolom kiri
+                const leftItems = element.parentElement.querySelectorAll('.matching-item');
+                leftItems.forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Tandai item yang dipilih
+                element.classList.add('selected');
+                selectedLeft = element.textContent;
+            } else {
+                // Hapus seleksi sebelumnya di kolom kanan
+                const rightItems = element.parentElement.querySelectorAll('.matching-item');
+                rightItems.forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Tandai item yang dipilih
+                element.classList.add('selected');
+                selectedRight = element.textContent;
+            }
+            
+            // Jika kedua item dipilih, buat pasangan
+            if (selectedLeft && selectedRight) {
+                matches[selectedLeft] = selectedRight;
+                
+                // Reset seleksi
+                selectedLeft = null;
+                selectedRight = null;
+                
+                // Hapus seleksi visual
+                const allItems = document.querySelectorAll('.matching-item');
+                allItems.forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                alert(`Anda telah memasangkan: ${Object.keys(matches)[Object.keys(matches).length - 1]} dengan ${Object.values(matches)[Object.values(matches).length - 1]}`);
+            }
+        }
+
+        // Fungsi untuk memeriksa tugas menjodohkan
+        function checkMatching() {
+            let score = 0;
+            let total = Object.keys(correctMatches).length;
+            
+            for (const leftItem in correctMatches) {
+                if (matches[leftItem] === correctMatches[leftItem]) {
+                    score++;
+                }
+            }
+            
+            const resultElement = document.getElementById('matching-result');
+            resultElement.textContent = `Nilai Tugas Menjodohkan: ${score}/${total}`;
+            resultElement.className = score === total ? "result success" : "result warning";
+            resultElement.style.display = 'block';
+        }
+
+        // Fungsi untuk drag and drop
+        let draggedItem = null;
+
+        function dragStart(event) {
+            draggedItem = event.target;
+            event.dataTransfer.setData('text/plain', event.target.textContent);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function dragEnter(event) {
+            event.preventDefault();
+            event.target.classList.add('highlight');
+        }
+
+        function dragLeave(event) {
+            event.target.classList.remove('highlight');
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            event.target.classList.remove('highlight');
+            
+            if (draggedItem) {
+                // Tambahkan item ke daftar urutan
+                dragOrder.push(draggedItem.textContent);
+                
+                // Tampilkan item yang sudah di-drop
+                const newItem = document.createElement('div');
+                newItem.className = 'drag-item';
+                newItem.textContent = draggedItem.textContent;
+                event.target.appendChild(newItem);
+                
+                // Nonaktifkan item yang sudah digunakan
+                draggedItem.style.opacity = '0.5';
+                draggedItem.draggable = false;
+                
+                draggedItem = null;
+            }
+        }
+
+        // Fungsi untuk memeriksa urutan drag and drop
+        function checkDragDrop() {
+            let isCorrect = true;
+            
+            for (let i = 0; i < correctOrder.length; i++) {
+                if (dragOrder[i] !== correctOrder[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+            
+            const resultElement = document.getElementById('dragdrop-result');
+            if (isCorrect) {
+                resultElement.textContent = "Urutan langkah benar!";
+                resultElement.className = "result success";
+            } else {
+                resultElement.textContent = "Urutan langkah salah. Urutan yang benar: Klik Kanan → Pilih New → Pilih Folder";
+                resultElement.className = "result warning";
+            }
+            resultElement.style.display = 'block';
+        }
+
+        // Fungsi untuk memeriksa tugas praktik
+        function checkTasks() {
+            const answer1 = document.getElementById('answer1').value.toLowerCase();
+            const answer2 = document.getElementById('answer2').value.toLowerCase();
+            const answer3 = document.getElementById('answer3').value.toLowerCase();
+            
+            let score = 0;
+            let feedback = "";
+            
+            // Periksa jawaban 1
+            if (answer1.includes('folder') && answer1.includes('file') && 
+                (answer1.includes('tempat') || answer1.includes('penyimpanan')) && 
+                answer1.includes('unit')) {
+                score++;
+                feedback += "Jawaban 1: Benar - Anda memahami perbedaan file dan folder.\n";
+            } else {
+                feedback += "Jawaban 1: Perlu diperbaiki - File adalah unit penyimpanan, sedangkan folder adalah tempat penyimpanan untuk file atau folder lain.\n";
+            }
+            
+            // Periksa jawaban 2
+            const ways = [
+                answer2.includes('ctrl+c') || answer2.includes('ctrl c') || answer2.includes('control+c'),
+                answer2.includes('klik kanan') && answer2.includes('copy'),
+                answer2.includes('menu home') && answer2.includes('copy')
+            ];
+            
+            const correctWays = ways.filter(way => way).length;
+            if (correctWays >= 3) {
+                score++;
+                feedback += "Jawaban 2: Benar - Anda mengetahui cara menyalin file.\n";
+            } else {
+                feedback += "Jawaban 2: Perlu diperbaiki - Cara menyalin file: 1) Ctrl+C dan Ctrl+V, 2) Klik kanan → Copy → Paste, 3) Menu Home → Copy → Paste.\n";
+            }
+            
+            // Periksa jawaban 3
+            if (answer3.includes('efisien') || answer3.includes('mudah') || 
+                answer3.includes('cepat') || answer3.includes('teratur') ||
+                answer3.includes('organis')) {
+                score++;
+                feedback += "Jawaban 3: Benar - Anda memahami pentingnya pengelolaan file yang terstruktur.\n";
+            } else {
+                feedback += "Jawaban 3: Perlu diperbaiki - Pengelolaan file yang terstruktur membuat pencarian file lebih efisien dan penggunaan komputer lebih terorganisir.\n";
+            }
+            
+            const resultElement = document.getElementById('tasks-result');
+            resultElement.textContent = `Nilai Tugas Praktik: ${score}/3\n\n${feedback}`;
+            resultElement.className = score === 3 ? "result success" : "result warning";
+            resultElement.style.display = 'block';
+        }
+
+        // Fungsi untuk memilih item pada kuis ekstensi file
+        function selectFileType(element, side) {
+            if (side === 'left') {
+                // Hapus seleksi sebelumnya di kolom kiri
+                const leftItems = element.parentElement.querySelectorAll('.matching-item');
+                leftItems.forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Tandai item yang dipilih
+                element.classList.add('selected');
+                selectedFileLeft = element.textContent;
+            } else {
+                // Hapus seleksi sebelumnya di kolom kanan
+                const rightItems = element.parentElement.querySelectorAll('.matching-item');
+                rightItems.forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Tandai item yang dipilih
+                element.classList.add('selected');
+                selectedFileRight = element.textContent;
+            }
+            
+            // Jika kedua item dipilih, buat pasangan
+            if (selectedFileLeft && selectedFileRight) {
+                fileMatches[selectedFileLeft] = selectedFileRight;
+                
+                // Reset seleksi
+                selectedFileLeft = null;
+                selectedFileRight = null;
+                
+                // Hapus seleksi visual
+                const allItems = document.querySelectorAll('.matching-item');
+                allItems.forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                alert(`Anda telah memasangkan: ${Object.keys(fileMatches)[Object.keys(fileMatches).length - 1]} dengan ${Object.values(fileMatches)[Object.values(fileMatches).length - 1]}`);
+            }
+        }
+
+        // Fungsi untuk memeriksa kuis ekstensi file
+        function checkFileTypes() {
+            let score = 0;
+            let total = Object.keys(correctFileTypes).length;
+            
+            for (const fileName in correctFileTypes) {
+                if (fileMatches[fileName] === correctFileTypes[fileName]) {
+                    score++;
+                }
+            }
+            
+            const resultElement = document.getElementById('filetype-result');
+            resultElement.textContent = `Nilai Kuis Ekstensi File: ${score}/${total}`;
+            resultElement.className = score === total ? "result success" : "result warning";
+            resultElement.style.display = 'block';
+        }
+
+        // Fungsi untuk menghitung nilai akhir
+        function calculateFinalScore() {
+            // Hitung nilai untuk setiap bagian
+            let mcScore = 0;
+            for (const questionId in correctAnswers) {
+                if (selectedOptions[questionId] === correctAnswers[questionId]) {
+                    mcScore++;
+                }
+            }
+            
+            let matchingScore = 0;
+            for (const leftItem in correctMatches) {
+                if (matches[leftItem] === correctMatches[leftItem]) {
+                    matchingScore++;
+                }
+            }
+            
+            let dragScore = 0;
+            let isDragCorrect = true;
+            for (let i = 0; i < correctOrder.length; i++) {
+                if (dragOrder[i] !== correctOrder[i]) {
+                    isDragCorrect = false;
+                    break;
+                }
+            }
+            if (isDragCorrect) dragScore = 1;
+            
+            // Untuk tugas praktik, kita asumsikan nilai maksimal 3
+            let taskScore = 0;
+            const answer1 = document.getElementById('answer1').value.toLowerCase();
+            const answer2 = document.getElementById('answer2').value.toLowerCase();
+            const answer3 = document.getElementById('answer3').value.toLowerCase();
+            
+            if (answer1.includes('folder') && answer1.includes('file') && 
+                (answer1.includes('tempat') || answer1.includes('penyimpanan')) && 
+                answer1.includes('unit')) {
+                taskScore++;
+            }
+            
+            const ways = [
+                answer2.includes('ctrl+c') || answer2.includes('ctrl c') || answer2.includes('control+c'),
+                answer2.includes('klik kanan') && answer2.includes('copy'),
+                answer2.includes('menu home') && answer2.includes('copy')
+            ];
+            
+            const correctWays = ways.filter(way => way).length;
+            if (correctWays >= 3) {
+                taskScore++;
+            }
+            
+            if (answer3.includes('efisien') || answer3.includes('mudah') || 
+                answer3.includes('cepat') || answer3.includes('teratur') ||
+                answer3.includes('organis')) {
+                taskScore++;
+            }
+            
+            let fileTypeScore = 0;
+            for (const fileName in correctFileTypes) {
+                if (fileMatches[fileName] === correctFileTypes[fileName]) {
+                    fileTypeScore++;
+                }
+            }
+            
+            // Hitung total nilai
+            const totalScore = mcScore + matchingScore + dragScore + taskScore + fileTypeScore;
+            const maxScore = Object.keys(correctAnswers).length + Object.keys(correctMatches).length + 1 + 3 + Object.keys(correctFileTypes).length;
+            
+            const percentage = (totalScore / maxScore) * 100;
+            
+            const resultElement = document.getElementById('final-result');
+            resultElement.innerHTML = `
+                <h3>Nilai Akhir: ${percentage.toFixed(1)}%</h3>
+                <p>Detail Nilai:</p>
+                <ul>
+                    <li>Kuis Pilihan Ganda: ${mcScore}/${Object.keys(correctAnswers).length}</li>
+                    <li>Tugas Menjodohkan: ${matchingScore}/${Object.keys(correctMatches).length}</li>
+                    <li>Tugas Drag and Drop: ${dragScore}/1</li>
+                    <li>Tugas Praktik: ${taskScore}/3</li>
+                    <li>Kuis Ekstensi File: ${fileTypeScore}/${Object.keys(correctFileTypes).length}</li>
+                </ul>
+                <p>Total: ${totalScore}/${maxScore}</p>
+            `;
+            
+            if (percentage >= 80) {
+                resultElement.className = "result success";
+            } else if (percentage >= 60) {
+                resultElement.className = "result warning";
+            } else {
+                resultElement.className = "result";
+                resultElement.style.backgroundColor = '#f8d7da';
+                resultElement.style.color = '#721c24';
+            }
+            
+            resultElement.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
