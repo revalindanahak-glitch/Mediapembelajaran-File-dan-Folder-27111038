@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Pembelajaran - File & Folder</title>
+    <style>
+        :root {
+            --primary: #FF9ED8;
+            --secondary: #A6E3E9;
+            --accent: #FFD6A5;
+            --dark: #6B5B95;
+            --light: #FFF9F5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 80%;
+            background: var(--secondary);
+            animation-delay: 4s;
+        }
+        
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            background: var(--accent);
+            animation-delay: 8s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-100px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(-200px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(-100px) rotate(270deg);
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-bunny {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            position: relative;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .logo-bunny::before, .logo-bunny::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            top: -8px;
+        }
+        
+        .logo-bunny::before {
+            left: 5px;
+            transform: rotate(-30deg);
+        }
+        
+        .logo-bunny::after {
+            right: 5px;
+            transform: rotate(30deg);
+        }
+        
+        .logo-bunny-face {
+            position: absolute;
+            width: 35px;
+            height: 25px;
+            top: 15px;
+            left: 7px;
+        }
+        
+        .logo-bunny-eye {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: var(--dark);
+            border-radius: 50%;
+            top: 5px;
+        }
+        
+        .logo-bunny-eye.left {
+            left: 8px;
+        }
+        
+        .logo-bunny-eye.right {
+            right: 8px;
+        }
+        
+        .logo-bunny-nose {
+            position: absolute;
+            width: 8px;
+            height: 5px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            top: 15px;
+            left: 13px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::before {
+            width: 100%;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .cta-button {
+            background-color: var(--dark);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .cta-button:hover {
+            background-color: white;
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .materi-section {
+            padding: 150px 0 100px;
+            background: linear-gradient(135deg, rgba(255, 158, 216, 0.1), rgba(166, 227, 233, 0.1));
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--dark);
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        .materi-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .submateri-nav {
+            flex: 1;
+            max-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 150px;
+        }
+        
+        .submateri-nav h3 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .submateri-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .submateri-btn {
+            background-color: var(--light);
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .submateri-btn:hover {
+            background-color: rgba(255, 158, 216, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .submateri-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .submateri-btn .icon {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .submateri-btn.active .icon {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .content-area {
+            flex: 2;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            min-height: 500px;
+        }
+        
+        .content-card {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .content-card.active {
+            display: block;
+        }
+        
+        .content-card h3 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .content-card h3 .icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .content-card p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .content-card ul, .content-card ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .content-card li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .highlight-box {
+            background-color: rgba(166, 227, 233, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .file-extensions {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .extension-item {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .extension-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .extension-name {
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .extension-desc {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .steps-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .step-card {
+            flex: 1;
+            min-width: 150px;
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+        }
+        
+        .step-card h4 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .step-card p {
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--dark);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background-color: white;
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .materi-container {
+                flex-direction: column;
+            }
+            
+            .submateri-nav {
+                max-width: 100%;
+                position: static;
+            }
+            
+            .steps-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-bunny">
+                    <div class="logo-bunny-face">
+                        <div class="logo-bunny-eye left"></div>
+                        <div class="logo-bunny-eye right"></div>
+                        <div class="logo-bunny-nose"></div>
+                    </div>
+                </div>
+                <div class="logo-text">File dan Folder</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="materi.html">Materi</a></li>
+                    <li><a href="game.html">Game & Kuis</a></li>
+                    <li><a href="evaluasi.html">Evaluasi</a></li>
+                </ul>
+            </nav>
+            <button class="cta-button">Mulai Belajar</button>
+        </div>
+    </header>
+
+    <section class="materi-section">
+        <div class="container">
+            <h2 class="section-title">Materi Pembelajaran</h2>
+            <div class="materi-container">
+                <div class="submateri-nav">
+                    <h3>Sub Materi</h3>
+                    <div class="submateri-buttons">
+                        <button class="submateri-btn active" data-target="pengertian">
+                            <span class="icon">📁</span> Pengertian File & Folder
+                        </button>
+                        <button class="submateri-btn" data-target="ekstensi">
+                            <span class="icon">📝</span> Ekstensi File
+                        </button>
+                        <button class="submateri-btn" data-target="mengelola">
+                            <span class="icon">🔄</span> Mengelola File & Folder
+                        </button>
+                        <button class="submateri-btn" data-target="tips">
+                            <span class="icon">💡</span> Tips Mengelola
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="content-area">
+                    <div class="content-card active" id="pengertian">
+                        <h3><span class="icon">📁</span> Pengertian File dan Folder</h3>
+                        <p><strong>File</strong> adalah unit penyimpanan di komputer yang berisi data. File dibuat oleh program tertentu dan dapat dibaca oleh program tertentu pula.</p>
+                        
+                        <p><strong>Folder</strong> (atau direktori) adalah tempat penyimpanan elektronis yang menyimpan file elektronis atau folder lain.</p>
+                        
+                        <div class="highlight-box">
+                            <p><strong>Analogi:</strong> Jika file adalah surat atau dokumen, maka folder adalah map yang digunakan untuk menyimpan surat-surat tersebut.</p>
+                        </div>
+                        
+                        <h4>Karakteristik File:</h4>
+                        <ul>
+                            <li>Memiliki nama dan ekstensi</li>
+                            <li>Memiliki ukuran tertentu</li>
+                            <li>Dibuat dan dibuka oleh program tertentu</li>
+                            <li>Berisi data atau informasi</li>
+                        </ul>
+                        
+                        <h4>Karakteristik Folder:</h4>
+                        <ul>
+                            <li>Berfungsi sebagai wadah atau kontainer</li>
+                            <li>Dapat berisi file dan folder lainnya</li>
+                            <li>Membantu mengorganisir data</li>
+                            <li>Tidak memiliki ekstensi</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-card" id="ekstensi">
+                        <h3><span class="icon">📝</span> Ekstensi File</h3>
+                        <p>Ekstensi file adalah nama pendek setelah tanda titik di akhir nama file yang menunjukkan jenis file.</p>
+                        
+                        <div class="file-extensions">
+                            <div class="extension-item">
+                                <div class="extension-name">.doc / .docx</div>
+                                <div class="extension-desc">Dokumen Microsoft Word</div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="extension-name">.pdf</div>
+                                <div class="extension-desc">Portable Document Format</div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="extension-name">.jpg / .png</div>
+                                <div class="extension-desc">File Gambar</div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="extension-name">.mp4 / .avi</div>
+                                <div class="extension-desc">File Video</div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="extension-name">.mp3 / .wav</div>
+                                <div class="extension-desc">File Audio</div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="extension-name">.xls / .xlsx</div>
+                                <div class="extension-desc">Spreadsheet Excel</div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="extension-name">.ppt / .pptx</div>
+                                <div class="extension-desc">Presentasi PowerPoint</div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="extension-name">.zip / .rar</div>
+                                <div class="extension-desc">File Terkompresi</div>
+                            </div>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <p><strong>Penting:</strong> Ekstensi file membantu sistem operasi mengetahui program apa yang harus digunakan untuk membuka file tersebut.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-card" id="mengelola">
+                        <h3><span class="icon">🔄</span> Mengelola File dan Folder di Windows</h3>
+                        <p>Windows menyediakan aplikasi File Explorer untuk mengelola file dan folder.</p>
+                        
+                        <h4>Operasi Dasar:</h4>
+                        <div class="steps-container">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h4>Membuat Folder</h4>
+                                <p>Klik kanan → New → Folder</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h4>Menyalin</h4>
+                                <p>Ctrl+C kemudian Ctrl+V</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h4>Memindahkan</h4>
+                                <p>Ctrl+X kemudian Ctrl+V</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h4>Mengubah Nama</h4>
+                                <p>Klik kanan → Rename</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h4>Menghapus</h4>
+                                <p>Pilih file/folder → tekan Delete</p>
+                            </div>
+                        </div>
+                        
+                        <h4>File Explorer:</h4>
+                        <ul>
+                            <li>Buka dengan menekan Windows + E</li>
+                            <li>Menampilkan struktur folder di panel kiri</li>
+                            <li>Menampilkan isi folder di panel kanan</li>
+                            <li>Memudahkan navigasi antara folder</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-card" id="tips">
+                        <h3><span class="icon">💡</span> Tips Mengelola File dan Folder</h3>
+                        
+                        <div class="highlight-box">
+                            <p>Mengelola file dan folder dengan baik akan meningkatkan produktivitas dan memudahkan pencarian data.</p>
+                        </div>
+                        
+                        <h4>Tips Organisasi:</h4>
+                        <ul>
+                            <li><strong>Buat struktur folder yang terorganisir</strong> - Gunakan hierarki yang logis</li>
+                            <li><strong>Beri nama file dan folder yang deskriptif</strong> - Gunakan nama yang jelas dan konsisten</li>
+                            <li><strong>Kelompokkan file berdasarkan jenis atau proyek</strong> - Pisahkan berdasarkan kategori</li>
+                            <li><strong>Backup file penting secara berkala</strong> - Simpan salinan di lokasi berbeda</li>
+                            <li><strong>Hapus file yang tidak diperlukan</strong> - Jaga kebersihan penyimpanan</li>
+                        </ul>
+                        
+                        <h4>Konvensi Penamaan yang Baik:</h4>
+                        <ul>
+                            <li>Gunakan huruf, angka, dan underscore (_)</li>
+                            <li>Hindari karakter khusus seperti /, \, :, *, ?, ", <, >, |</li>
+                            <li>Gunakan format tanggal (YYYY-MM-DD) untuk file berkala</li>
+                            <li>Buat nama yang deskriptif namun ringkas</li>
+                        </ul>
+                    </div>
+                    
+                    <a href="materi.html" class="back-button">← Kembali ke Halaman Materi Utama</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FileFolderEdu</h3>
+                    <p>Platform pembelajaran interaktif untuk menguasai keterampilan mengelola file dan folder.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Navigasi</h3>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="materi.html">Materi</a></li>
+                        <li><a href="kuis.html">Kuis & Game</a></li>
+                        <li><a href="evaluasi.html">Evaluasi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontak</h3>
+                    <ul>
+                        <li>Email: revanahak@gmail.com</li>
+                        <li>Telepon: 081337503785</li>
+                        <li>Alamat: Kos Ijo Totty Kayu Putih Kupang</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 FileFolderReva. dibuat oleh Ana Maria Revalinda Nahak.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Floating particles
+        const body = document.body;
+        const particlesDiv = document.createElement('div');
+        particlesDiv.className = 'floating-particles';
+        for (let i = 0; i < 3; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particlesDiv.appendChild(particle);
+        }
+        body.insertBefore(particlesDiv, body.firstChild);
+        
+        // Navigation between content cards
+        const submateriButtons = document.querySelectorAll('.submateri-btn');
+        const contentCards = document.querySelectorAll('.content-card');
+        
+        submateriButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and cards
+                submateriButtons.forEach(btn => btn.classList.remove('active'));
+                contentCards.forEach(card => card.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Show corresponding content card
+                const targetId = button.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+        
+        // CTA button effect
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+                setTimeout(() => {
+                    alert('Terima kasih! Anda akan diarahkan ke halaman pembelajaran.');
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

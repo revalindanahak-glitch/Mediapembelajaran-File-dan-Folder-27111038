@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif - File & Folder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF6BB5;
+            --secondary: #4DCCFF;
+            --accent: #FFD166;
+            --dark: #6B5B95;
+            --light: #FFF9F5;
+            --correct: #06D6A0;
+            --incorrect: #EF476F;
+            --bg-gradient: linear-gradient(135deg, #FF9ED8 0%, #A6E3E9 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--bg-gradient);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .kuis-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .kuis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .score-display {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .progress-container {
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 10%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+        }
+        
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .option.selected {
+            border-color: var(--primary);
+            background: rgba(255, 107, 181, 0.05);
+        }
+        
+        .option.correct {
+            border-color: var(--correct);
+            background: rgba(6, 214, 160, 0.1);
+        }
+        
+        .option.incorrect {
+            border-color: var(--incorrect);
+            background: rgba(239, 71, 111, 0.1);
+        }
+        
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--secondary);
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .option-text {
+            font-size: 1.1rem;
+        }
+        
+        .feedback {
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .feedback.correct {
+            background: rgba(6, 214, 160, 0.1);
+            border: 1px solid var(--correct);
+            display: flex;
+        }
+        
+        .feedback.incorrect {
+            background: rgba(239, 71, 111, 0.1);
+            border: 1px solid var(--incorrect);
+            display: flex;
+        }
+        
+        .feedback-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 20px;
+        }
+        
+        .feedback.correct .feedback-icon {
+            background: var(--correct);
+            color: white;
+        }
+        
+        .feedback.incorrect .feedback-icon {
+            background: var(--incorrect);
+            color: white;
+        }
+        
+        .feedback-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(166, 227, 233, 0.2);
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .nav-button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-button.prev {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .nav-button.next {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .results-container {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .results-title {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+        
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: conic-gradient(var(--correct) 0% 70%, #f0f0f0 70% 100%);
+        }
+        
+        .score-inner {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .score-text {
+            font-size: 1.2rem;
+            color: #666;
+        }
+        
+        .score-message {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .restart-button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+        
+        .restart-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: var(--primary);
+            opacity: 0;
+            animation: confetti-fall 5s linear forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .bounce {
+            animation: bounce 0.5s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .kuis-card {
+                padding: 25px;
+            }
+            
+            .question-text {
+                font-size: 1.3rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 80%;
+            background: var(--secondary);
+            animation-delay: 4s;
+        }
+        
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            background: var(--accent);
+            animation-delay: 8s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-100px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(-200px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(-100px) rotate(270deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles"></div>
+    
+    <div class="container">
+        <div class="kuis-card">
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="logo-text">Kuis File & Folder</div>
+                </div>
+                <div class="score-display">Skor: <span id="score-value">0</span>/10</div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span class="current-question">Pertanyaan 1</span>
+                    <span class="total-questions">dari 10</span>
+                </div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question-text">File adalah …</div>
+                <div class="options-container">
+                    <div class="option" data-value="A">
+                        <span class="option-letter">A</span>
+                        <span class="option-text">Program untuk membuka dokumen</span>
+                    </div>
+                    <div class="option" data-value="B">
+                        <span class="option-letter">B</span>
+                        <span class="option-text">Tempat menyimpan data seperti dokumen, gambar, atau video</span>
+                    </div>
+                    <div class="option" data-value="C">
+                        <span class="option-letter">C</span>
+                        <span class="option-text">Perangkat keras untuk menyimpan data</span>
+                    </div>
+                    <div class="option" data-value="D">
+                        <span class="option-letter">D</span>
+                        <span class="option-text">Folder yang berisi banyak file</span>
+                    </div>
+                </div>
+                
+                <div class="feedback correct">
+                    <div class="feedback-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="feedback-text">Yey, kamu benar! Jawaban tepat sekali.</div>
+                </div>
+                
+                <div class="feedback incorrect">
+                    <div class="feedback-icon">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="feedback-text">Yah, kamu salah. Coba lagi!</div>
+                </div>
+                
+                <div class="explanation">
+                    <strong>Penjelasan:</strong> File adalah unit penyimpanan data seperti dokumen, gambar, atau video.
+                </div>
+            </div>
+            
+            <div class="navigation-buttons">
+                <button class="nav-button prev" disabled>
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="nav-button next">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="results-container">
+                <h2 class="results-title">Hasil Kuis</h2>
+                <div class="score-circle">
+                    <div class="score-inner">
+                        <div class="score" id="final-score">0</div>
+                        <div class="score-text">dari 10</div>
+                    </div>
+                </div>
+                <div class="score-message" id="score-message">Selamat! Anda telah menyelesaikan kuis.</div>
+                <button class="restart-button">
+                    <i class="fas fa-redo"></i> Ulangi Kuis
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data kuis
+        const quizData = [
+            {
+                question: "File adalah …",
+                options: [
+                    "Program untuk membuka dokumen",
+                    "Tempat menyimpan data seperti dokumen, gambar, atau video",
+                    "Perangkat keras untuk menyimpan data",
+                    "Folder yang berisi banyak file"
+                ],
+                correctAnswer: "B",
+                explanation: "File adalah unit penyimpanan data seperti dokumen, gambar, atau video."
+            },
+            {
+                question: "Folder berfungsi untuk …",
+                options: [
+                    "Menghapus file yang tidak digunakan",
+                    "Menyimpan file atau folder lain agar rapi",
+                    "Membuka program di komputer",
+                    "Menggandakan file"
+                ],
+                correctAnswer: "B",
+                explanation: "Folder adalah wadah tempat menyimpan file dan folder lain agar data tersusun rapi."
+            },
+            {
+                question: "Aplikasi bawaan Windows untuk mengelola file dan folder adalah …",
+                options: [
+                    "Microsoft Word",
+                    "File Explorer",
+                    "Recycle Bin",
+                    "Paint"
+                ],
+                correctAnswer: "B",
+                explanation: "File Explorer digunakan untuk melihat, mengatur, memindahkan, dan menghapus file atau folder."
+            },
+            {
+                question: "Tanda yang digunakan untuk mengenali jenis file disebut …",
+                options: [
+                    "Nama File",
+                    "Ekstensi File",
+                    "Tipe Folder",
+                    "Shortcut"
+                ],
+                correctAnswer: "B",
+                explanation: "Ekstensi file menunjukkan jenis file, misalnya .docx, .jpg, .mp4."
+            },
+            {
+                question: "Ekstensi .mp4 biasanya digunakan untuk …",
+                options: [
+                    "Gambar",
+                    "Dokumen",
+                    "Video",
+                    "Musik"
+                ],
+                correctAnswer: "C",
+                explanation: ".mp4 adalah format umum untuk file video."
+            },
+            {
+                question: "Untuk menyalin file di Windows, kombinasi tombol yang digunakan adalah …",
+                options: [
+                    "Ctrl + X",
+                    "Ctrl + C",
+                    "Ctrl + V",
+                    "Ctrl + D"
+                ],
+                correctAnswer: "B",
+                explanation: "Ctrl + C digunakan untuk menyalin file atau teks di Windows."
+            },
+            {
+                question: "Fungsi Recycle Bin adalah …",
+                options: [
+                    "Menyimpan semua file penting",
+                    "Tempat sementara untuk file yang dihapus",
+                    "Menyimpan folder kerja",
+                    "Menyimpan cadangan file"
+                ],
+                correctAnswer: "B",
+                explanation: "File yang dihapus akan masuk ke Recycle Bin sebelum benar-benar hilang dari komputer."
+            },
+            {
+                question: "Perintah untuk mengubah nama file atau folder adalah …",
+                options: [
+                    "Rename",
+                    "Delete",
+                    "Copy",
+                    "Open"
+                ],
+                correctAnswer: "A",
+                explanation: "Rename digunakan untuk mengganti nama file atau folder agar lebih deskriptif."
+            },
+            {
+                question: "Kenapa penting membuat backup file?",
+                options: [
+                    "Agar file bisa dibuka lebih cepat",
+                    "Untuk menyimpan salinan jika file asli hilang atau rusak",
+                    "Agar tidak perlu membuat folder",
+                    "Untuk memperbanyak ruang penyimpanan"
+                ],
+                correctAnswer: "B",
+                explanation: "Backup mencegah kehilangan data penting saat file asli rusak atau terhapus."
+            },
+            {
+                question: "Untuk menghapus file secara permanen dari Recycle Bin, kita harus …",
+                options: [
+                    "Klik kanan → Delete",
+                    "Klik kanan → Restore",
+                    "Klik kanan → Empty Recycle Bin",
+                    "Klik kanan → Rename"
+                ],
+                correctAnswer: "C",
+                explanation: "\"Empty Recycle Bin\" akan menghapus seluruh isi Recycle Bin secara permanen."
+            }
+        ];
+
+        // Variabel kuis
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        // Elemen DOM
+        const scoreValueEl = document.getElementById('score-value');
+        const progressFillEl = document.querySelector('.progress-fill');
+        const currentQuestionEl = document.querySelector('.current-question');
+        const totalQuestionsEl = document.querySelector('.total-questions');
+        const questionTextEl = document.querySelector('.question-text');
+        const optionsContainerEl = document.querySelector('.options-container');
+        const correctFeedbackEl = document.querySelector('.feedback.correct');
+        const incorrectFeedbackEl = document.querySelector('.feedback.incorrect');
+        const explanationEl = document.querySelector('.explanation');
+        const prevButtonEl = document.querySelector('.nav-button.prev');
+        const nextButtonEl = document.querySelector('.nav-button.next');
+        const resultsContainerEl = document.querySelector('.results-container');
+        const finalScoreEl = document.getElementById('final-score');
+        const scoreMessageEl = document.getElementById('score-message');
+        const restartButtonEl = document.querySelector('.restart-button');
+
+        // Fungsi untuk memuat pertanyaan
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            
+            // Update nomor pertanyaan dan progress bar
+            currentQuestionEl.textContent = `Pertanyaan ${currentQuestion + 1}`;
+            totalQuestionsEl.textContent = `dari ${quizData.length}`;
+            progressFillEl.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+            scoreValueEl.textContent = score;
+            
+            // Update teks pertanyaan
+            questionTextEl.textContent = question.question;
+            
+            // Update opsi jawaban
+            optionsContainerEl.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.dataset.value = String.fromCharCode(65 + index); // A, B, C, D
+                
+                const optionLetter = document.createElement('span');
+                optionLetter.className = 'option-letter';
+                optionLetter.textContent = String.fromCharCode(65 + index);
+                
+                const optionText = document.createElement('span');
+                optionText.className = 'option-text';
+                optionText.textContent = option;
+                
+                optionEl.appendChild(optionLetter);
+                optionEl.appendChild(optionText);
+                
+                // Jika jawaban sudah dipilih sebelumnya, tandai
+                if (userAnswers[currentQuestion] === optionEl.dataset.value) {
+                    optionEl.classList.add('selected');
+                    
+                    // Jika sudah dikoreksi, tampilkan status benar/salah
+                    if (userAnswers[currentQuestion] !== null) {
+                        if (userAnswers[currentQuestion] === question.correctAnswer) {
+                            optionEl.classList.add('correct');
+                        } else {
+                            optionEl.classList.add('incorrect');
+                            
+                            // Tampilkan jawaban yang benar
+                            const correctOption = document.querySelector(`.option[data-value="${question.correctAnswer}"]`);
+                            if (correctOption) {
+                                correctOption.classList.add('correct');
+                            }
+                        }
+                    }
+                }
+                
+                optionEl.addEventListener('click', selectOption);
+                optionsContainerEl.appendChild(optionEl);
+            });
+            
+            // Update penjelasan
+            explanationEl.textContent = `Penjelasan: ${question.explanation}`;
+            explanationEl.classList.remove('show');
+            
+            // Sembunyikan feedback
+            correctFeedbackEl.style.display = 'none';
+            incorrectFeedbackEl.style.display = 'none';
+            
+            // Update tombol navigasi
+            prevButtonEl.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizData.length - 1) {
+                nextButtonEl.textContent = 'Selesai';
+                nextButtonEl.innerHTML = 'Selesai <i class="fas fa-flag-checkered"></i>';
+            } else {
+                nextButtonEl.textContent = 'Selanjutnya';
+                nextButtonEl.innerHTML = 'Selanjutnya <i class="fas fa-arrow-right"></i>';
+            }
+            
+            // Sembunyikan hasil jika ditampilkan
+            resultsContainerEl.style.display = 'none';
+            document.querySelector('.question-container').style.display = 'block';
+            document.querySelector('.navigation-buttons').style.display = 'flex';
+        }
+
+        // Fungsi untuk memilih opsi
+        function selectOption(e) {
+            // Hanya izinkan pemilihan jika belum dikoreksi
+            if (userAnswers[currentQuestion] !== null) return;
+            
+            const selectedOption = e.currentTarget;
+            const selectedValue = selectedOption.dataset.value;
+            
+            // Hapus pilihan sebelumnya
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Tandai pilihan saat ini
+            selectedOption.classList.add('selected');
+            
+            // Simpan jawaban pengguna
+            userAnswers[currentQuestion] = selectedValue;
+            
+            // Periksa jawaban
+            const isCorrect = selectedValue === quizData[currentQuestion].correctAnswer;
+            
+            // Tampilkan status jawaban
+            if (isCorrect) {
+                selectedOption.classList.add('correct');
+                score++;
+                scoreValueEl.textContent = score;
+                
+                // Tampilkan feedback benar
+                correctFeedbackEl.style.display = 'flex';
+                incorrectFeedbackEl.style.display = 'none';
+                
+                // Animasi feedback
+                correctFeedbackEl.classList.add('bounce');
+                setTimeout(() => {
+                    correctFeedbackEl.classList.remove('bounce');
+                }, 500);
+            } else {
+                selectedOption.classList.add('incorrect');
+                
+                // Tampilkan jawaban yang benar
+                const correctOption = document.querySelector(`.option[data-value="${quizData[currentQuestion].correctAnswer}"]`);
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+                
+                // Tampilkan feedback salah
+                incorrectFeedbackEl.style.display = 'flex';
+                correctFeedbackEl.style.display = 'none';
+                
+                // Animasi feedback
+                incorrectFeedbackEl.classList.add('bounce');
+                setTimeout(() => {
+                    incorrectFeedbackEl.classList.remove('bounce');
+                }, 500);
+            }
+            
+            // Tampilkan penjelasan
+            explanationEl.classList.add('show');
+        }
+
+        // Fungsi untuk pindah ke pertanyaan berikutnya
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Fungsi untuk kembali ke pertanyaan sebelumnya
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        // Fungsi untuk menampilkan hasil
+        function showResults() {
+            document.querySelector('.question-container').style.display = 'none';
+            document.querySelector('.navigation-buttons').style.display = 'none';
+            resultsContainerEl.style.display = 'block';
+            
+            finalScoreEl.textContent = score;
+            
+            // Update lingkaran skor
+            const percentage = (score / quizData.length) * 100;
+            const scoreCircle = document.querySelector('.score-circle');
+            scoreCircle.style.background = `conic-gradient(var(--correct) 0% ${percentage}%, #f0f0f0 ${percentage}% 100%)`;
+            
+            let message = '';
+            if (score === quizData.length) {
+                message = 'Sempurna! Anda benar-benar menguasai materi file dan folder.';
+                createConfetti();
+            } else if (score >= quizData.length * 0.7) {
+                message = 'Bagus! Anda sudah memahami materi file dan folder dengan baik.';
+            } else if (score >= quizData.length * 0.5) {
+                message = 'Cukup baik! Anda sudah memahami sebagian besar materi.';
+            } else {
+                message = 'Perlu belajar lagi. Coba ulangi materi file dan folder.';
+            }
+            
+            scoreMessageEl.textContent = message;
+        }
+
+        // Fungsi untuk membuat efek confetti
+        function createConfetti() {
+            const colors = ['#FF6BB5', '#4DCCFF', '#FFD166', '#06D6A0', '#6B5B95'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(confetti);
+                
+                // Hapus confetti setelah animasi selesai
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Fungsi untuk mengulang kuis
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers.fill(null);
+            
+            document.querySelector('.question-container').style.display = 'block';
+            document.querySelector('.navigation-buttons').style.display = 'flex';
+            resultsContainerEl.style.display = 'none';
+            
+            loadQuestion();
+        }
+
+        // Event listeners
+        prevButtonEl.addEventListener('click', prevQuestion);
+        nextButtonEl.addEventListener('click', nextQuestion);
+        restartButtonEl.addEventListener('click', restartQuiz);
+
+        // Inisialisasi partikel
+        const particlesDiv = document.querySelector('.floating-particles');
+        for (let i = 0; i < 3; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particlesDiv.appendChild(particle);
+        }
+
+        // Muat pertanyaan pertama
+        loadQuestion();
+    </script>
+</body>
+</html>

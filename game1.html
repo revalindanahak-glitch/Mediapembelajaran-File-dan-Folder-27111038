@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Frenzy - Game Edukasi File & Folder</title>
+    <style>
+        :root {
+            --primary: #FF9ED8;
+            --secondary: #A6E3E9;
+            --accent: #FFD6A5;
+            --dark: #6B5B95;
+            --light: #FFF9F5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 80%;
+            background: var(--secondary);
+            animation-delay: 4s;
+        }
+        
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            background: var(--accent);
+            animation-delay: 8s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-100px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(-200px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(-100px) rotate(270deg);
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-bunny {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            position: relative;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .logo-bunny::before, .logo-bunny::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            top: -8px;
+        }
+        
+        .logo-bunny::before {
+            left: 5px;
+            transform: rotate(-30deg);
+        }
+        
+        .logo-bunny::after {
+            right: 5px;
+            transform: rotate(30deg);
+        }
+        
+        .logo-bunny-face {
+            position: absolute;
+            width: 35px;
+            height: 25px;
+            top: 15px;
+            left: 7px;
+        }
+        
+        .logo-bunny-eye {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: var(--dark);
+            border-radius: 50%;
+            top: 5px;
+        }
+        
+        .logo-bunny-eye.left {
+            left: 8px;
+        }
+        
+        .logo-bunny-eye.right {
+            right: 8px;
+        }
+        
+        .logo-bunny-nose {
+            position: absolute;
+            width: 8px;
+            height: 5px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            top: 15px;
+            left: 13px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::before {
+            width: 100%;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .cta-button {
+            background-color: var(--dark);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .cta-button:hover {
+            background-color: white;
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .game-section {
+            padding: 150px 0 100px;
+            background: linear-gradient(135deg, rgba(255, 158, 216, 0.1), rgba(166, 227, 233, 0.1));
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark);
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        .game-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 10px;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .timer {
+            color: #e74c3c;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 500px;
+            position: relative;
+            background: linear-gradient(to bottom, rgba(166, 227, 233, 0.1), rgba(255, 158, 216, 0.1));
+            border-radius: 10px;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .folders-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .folder {
+            width: 120px;
+            height: 100px;
+            background-color: var(--secondary);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .folder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .folder:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .folder-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .folder-name {
+            font-weight: bold;
+            color: var(--dark);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .files-container {
+            flex: 1;
+            position: relative;
+            border: 2px dashed var(--accent);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .file {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            background-color: white;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            user-select: none;
+            animation: float-file 3s infinite ease-in-out;
+        }
+        
+        .file.dragging {
+            opacity: 0.7;
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes float-file {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .file-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .file-name {
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .file-type-image { background-color: #FFD6A5; }
+        .file-type-document { background-color: #A6E3E9; }
+        .file-type-video { background-color: #FF9ED8; }
+        .file-type-audio { background-color: #C8E6C9; }
+        .file-type-archive { background-color: #D1C4E9; }
+        
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .game-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+        }
+        
+        .error {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #c62828;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 10px;
+        }
+        
+        .instructions h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .folders-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .folder {
+                width: 100px;
+                height: 90px;
+            }
+            
+            .game-area {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-bunny">
+                    <div class="logo-bunny-face">
+                        <div class="logo-bunny-eye left"></div>
+                        <div class="logo-bunny-eye right"></div>
+                        <div class="logo-bunny-nose"></div>
+                    </div>
+                </div>
+                <div class="logo-text">File dan Folder</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="materi.html">Materi</a></li>
+                    <li><a href="game.html">Game & Kuis</a></li>
+                    <li><a href="evaluasi.html">Evaluasi</a></li>
+                </ul>
+            </nav>
+            <button class="cta-button">Mulai Belajar</button>
+        </div>
+    </header>
+
+    <section class="game-section">
+        <div class="container">
+            <h2 class="section-title">Folder Frenzy</h2>
+            <div class="game-container">
+                <div class="game-info">
+                    <div class="info-item">
+                        <div class="info-label">Skor</div>
+                        <div class="info-value" id="score">0</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Waktu</div>
+                        <div class="info-value timer" id="timer">60</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Level</div>
+                        <div class="info-value" id="level">1</div>
+                    </div>
+                </div>
+                
+                <div class="game-area">
+                    <div class="folders-container">
+                        <div class="folder" data-type="image">
+                            <div class="folder-icon">🖼️</div>
+                            <div class="folder-name">Images</div>
+                        </div>
+                        <div class="folder" data-type="document">
+                            <div class="folder-icon">📄</div>
+                            <div class="folder-name">Documents</div>
+                        </div>
+                        <div class="folder" data-type="video">
+                            <div class="folder-icon">🎥</div>
+                            <div class="folder-name">Videos</div>
+                        </div>
+                        <div class="folder" data-type="audio">
+                            <div class="folder-icon">🎵</div>
+                            <div class="folder-name">Audio</div>
+                        </div>
+                        <div class="folder" data-type="archive">
+                            <div class="folder-icon">📦</div>
+                            <div class="folder-name">Archives</div>
+                        </div>
+                    </div>
+                    
+                    <div class="files-container" id="files-container">
+                        <!-- Files will be generated here -->
+                    </div>
+                    
+                    <div class="game-message" id="message"></div>
+                </div>
+                
+                <div class="game-controls">
+                    <button class="cta-button" id="start-btn">Mulai Game</button>
+                    <button class="cta-button" id="reset-btn">Reset</button>
+                </div>
+                
+                <div class="instructions">
+                    <h3>Cara Bermain:</h3>
+                    <ul>
+                        <li>Seret file yang jatuh ke folder yang sesuai</li>
+                        <li>Images (.jpg, .png) → folder Images</li>
+                        <li>Documents (.docx, .pdf) → folder Documents</li>
+                        <li>Videos (.mp4, .avi) → folder Videos</li>
+                        <li>Audio (.mp3, .wav) → folder Audio</li>
+                        <li>Archives (.zip, .rar) → folder Archives</li>
+                        <li>Dapatkan skor tinggi dengan cepat dan tepat!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FileFolderEdu</h3>
+                    <p>Platform pembelajaran interaktif untuk menguasai keterampilan mengelola file dan folder.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Navigasi</h3>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="materi.html">Materi</a></li>
+                        <li><a href="game.html">Game & Kuis</a></li>
+                        <li><a href="evaluasi.html">Evaluasi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontak</h3>
+                    <ul>
+                        <li>Email: revanahak@gmail.com</li>
+                        <li>Telepon: 081337503785</li>
+                        <li>Alamat: Kos Ijo Totty Kayu Putih Kupang</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 FileFolderReva. dibuat oleh Ana Maria Revalinda Nahak.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Game variables
+        let score = 0;
+        let timeLeft = 60;
+        let level = 1;
+        let gameActive = false;
+        let timerInterval;
+        let fileInterval;
+        
+        // File types and their extensions
+        const fileTypes = {
+            image: {
+                extensions: ['.jpg', '.png', '.gif', '.bmp', '.svg'],
+                icon: '🖼️',
+                colorClass: 'file-type-image'
+            },
+            document: {
+                extensions: ['.docx', '.pdf', '.txt', '.ppt', '.xlsx'],
+                icon: '📄',
+                colorClass: 'file-type-document'
+            },
+            video: {
+                extensions: ['.mp4', '.avi', '.mov', '.wmv', '.flv'],
+                icon: '🎥',
+                colorClass: 'file-type-video'
+            },
+            audio: {
+                extensions: ['.mp3', '.wav', '.aac', '.flac', '.ogg'],
+                icon: '🎵',
+                colorClass: 'file-type-audio'
+            },
+            archive: {
+                extensions: ['.zip', '.rar', '.7z', '.tar', '.gz'],
+                icon: '📦',
+                colorClass: 'file-type-archive'
+            }
+        };
+        
+        // DOM elements
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const levelElement = document.getElementById('level');
+        const filesContainer = document.getElementById('files-container');
+        const messageElement = document.getElementById('message');
+        const startButton = document.getElementById('start-btn');
+        const resetButton = document.getElementById('reset-btn');
+        const folders = document.querySelectorAll('.folder');
+        
+        // Initialize floating particles
+        const body = document.body;
+        const particlesDiv = document.createElement('div');
+        particlesDiv.className = 'floating-particles';
+        for (let i = 0; i < 3; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particlesDiv.appendChild(particle);
+        }
+        body.insertBefore(particlesDiv, body.firstChild);
+        
+        // Generate a random file
+        function generateFile() {
+            if (!gameActive) return;
+            
+            const fileTypesArray = Object.keys(fileTypes);
+            const randomType = fileTypesArray[Math.floor(Math.random() * fileTypesArray.length)];
+            const fileType = fileTypes[randomType];
+            const extension = fileType.extensions[Math.floor(Math.random() * fileType.extensions.length)];
+            
+            const file = document.createElement('div');
+            file.className = `file ${fileType.colorClass}`;
+            file.setAttribute('data-type', randomType);
+            file.setAttribute('draggable', 'true');
+            
+            // Random position at the top
+            const maxLeft = filesContainer.offsetWidth - 80;
+            const left = Math.floor(Math.random() * maxLeft);
+            file.style.left = `${left}px`;
+            file.style.top = '0px';
+            
+            // File content
+            file.innerHTML = `
+                <div class="file-icon">${fileType.icon}</div>
+                <div class="file-name">file${Math.floor(Math.random() * 1000)}${extension}</div>
+            `;
+            
+            // Add drag events
+            file.addEventListener('dragstart', handleDragStart);
+            
+            filesContainer.appendChild(file);
+            
+            // Animate file falling
+            let top = 0;
+            const fallInterval = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(fallInterval);
+                    return;
+                }
+                
+                top += 2 + level * 0.5; // Speed increases with level
+                file.style.top = `${top}px`;
+                
+                // Remove if file reaches bottom
+                if (top > filesContainer.offsetHeight - 100) {
+                    clearInterval(fallInterval);
+                    file.remove();
+                    showMessage('File tidak tersimpan!', 'error');
+                    updateScore(-5);
+                }
+            }, 50);
+        }
+        
+        // Drag and drop functionality
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.getAttribute('data-type'));
+            e.target.classList.add('dragging');
+        }
+        
+        // Allow drop on folders
+        folders.forEach(folder => {
+            folder.addEventListener('dragover', e => {
+                e.preventDefault();
+            });
+            
+            folder.addEventListener('drop', e => {
+                e.preventDefault();
+                const fileType = e.dataTransfer.getData('text/plain');
+                const folderType = folder.getAttribute('data-type');
+                
+                // Check if file matches folder
+                if (fileType === folderType) {
+                    showMessage('Benar! File tersimpan dengan baik.', 'success');
+                    updateScore(10);
+                } else {
+                    showMessage('Salah! File tidak sesuai dengan folder.', 'error');
+                    updateScore(-5);
+                }
+                
+                // Remove the dragged file
+                const draggingFile = document.querySelector('.file.dragging');
+                if (draggingFile) {
+                    draggingFile.remove();
+                }
+            });
+        });
+        
+        // Update score
+        function updateScore(points) {
+            score += points;
+            if (score < 0) score = 0;
+            scoreElement.textContent = score;
+            
+            // Level up every 50 points
+            const newLevel = Math.floor(score / 50) + 1;
+            if (newLevel > level) {
+                level = newLevel;
+                levelElement.textContent = level;
+                showMessage(`Level ${level}!
+Semakin cepat file jatuh!`, 'success');
+            }
+        }
+        
+        // Show message
+        function showMessage(text, type) {
+            messageElement.textContent = text;
+            messageElement.className = `game-message ${type}`;
+            messageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Start game
+        function startGame() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            score = 0;
+            timeLeft = 60;
+            level = 1;
+            
+            scoreElement.textContent = score;
+            levelElement.textContent = level;
+            timerElement.textContent = timeLeft;
+            
+            // Clear any existing files
+            filesContainer.innerHTML = '';
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            // Start generating files
+            fileInterval = setInterval(generateFile, 1500 - (level * 100)); // Faster files at higher levels
+            
+            startButton.textContent = 'Game Berjalan...';
+            startButton.disabled = true;
+        }
+        
+        // End game
+        function endGame() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            clearInterval(fileInterval);
+            
+            // Clear files
+            filesContainer.innerHTML = '';
+            
+            showMessage(`Game Selesai! Skor akhir: ${score}`, 'success');
+            
+            startButton.textContent = 'Mulai Lagi';
+            startButton.disabled = false;
+        }
+        
+        // Reset game
+        function resetGame() {
+            if (gameActive) {
+                clearInterval(timerInterval);
+                clearInterval(fileInterval);
+            }
+            
+            gameActive = false;
+            score = 0;
+            timeLeft = 60;
+            level = 1;
+            
+            scoreElement.textContent = score;
+            levelElement.textContent = level;
+            timerElement.textContent = timeLeft;
+            
+            filesContainer.innerHTML = '';
+            messageElement.style.display = 'none';
+            
+            startButton.textContent = 'Mulai Game';
+            startButton.disabled = false;
+        }
+        
+        // Event listeners
+        startButton.addEventListener('click', startGame);
+        resetButton.addEventListener('click', resetGame);
+        
+        // CTA button effect
+        document.querySelectorAll('.cta-button').forEach(button => {
+            if (button.id !== 'start-btn' && button.id !== 'reset-btn') {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+                    setTimeout(() => {
+                        alert('Terima kasih! Anda akan diarahkan ke halaman pembelajaran.');
+                    }, 300);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

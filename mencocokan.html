@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Mencocokkan - File & Folder</title>
+    <style>
+        :root {
+            --primary: #FF9ED8;
+            --secondary: #A6E3E9;
+            --accent: #FFD6A5;
+            --dark: #6B5B95;
+            --light: #FFF9F5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 80%;
+            background: var(--secondary);
+            animation-delay: 4s;
+        }
+        
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            background: var(--accent);
+            animation-delay: 8s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-100px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(-200px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(-100px) rotate(270deg);
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-bunny {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            position: relative;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .logo-bunny::before, .logo-bunny::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            top: -8px;
+        }
+        
+        .logo-bunny::before {
+            left: 5px;
+            transform: rotate(-30deg);
+        }
+        
+        .logo-bunny::after {
+            right: 5px;
+            transform: rotate(30deg);
+        }
+        
+        .logo-bunny-face {
+            position: absolute;
+            width: 35px;
+            height: 25px;
+            top: 15px;
+            left: 7px;
+        }
+        
+        .logo-bunny-eye {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: var(--dark);
+            border-radius: 50%;
+            top: 5px;
+        }
+        
+        .logo-bunny-eye.left {
+            left: 8px;
+        }
+        
+        .logo-bunny-eye.right {
+            right: 8px;
+        }
+        
+        .logo-bunny-nose {
+            position: absolute;
+            width: 8px;
+            height: 5px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            top: 15px;
+            left: 13px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::before {
+            width: 100%;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .cta-button {
+            background-color: var(--dark);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .cta-button:hover {
+            background-color: white;
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .game-section {
+            padding: 150px 0 100px;
+            background: linear-gradient(135deg, rgba(255, 158, 216, 0.1), rgba(166, 227, 233, 0.1));
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark);
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        .game-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 10px;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .timer {
+            color: #e74c3c;
+        }
+        
+        .matching-game {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .game-instructions {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 1.1rem;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .terms-column, .definitions-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .column-title {
+            text-align: center;
+            color: var(--dark);
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .term-card, .definition-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .term-card {
+            border-left: 5px solid var(--primary);
+        }
+        
+        .definition-card {
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .term-card:hover, .definition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        
+        .term-card.selected {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .definition-card.selected {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .term-card.matched, .definition-card.matched {
+            background-color: #C8E6C9;
+            color: #2e7d32;
+            cursor: default;
+            transform: scale(0.95);
+            opacity: 0.7;
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .game-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+        }
+        
+        .error {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #c62828;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 10px;
+        }
+        
+        .instructions h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-bunny">
+                    <div class="logo-bunny-face">
+                        <div class="logo-bunny-eye left"></div>
+                        <div class="logo-bunny-eye right"></div>
+                        <div class="logo-bunny-nose"></div>
+                    </div>
+                </div>
+                <div class="logo-text">File dan Folder</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="materi.html">Materi</a></li>
+                    <li><a href="game.html">Game & Kuis</a></li>
+                    <li><a href="evaluasi.html">Evaluasi</a></li>
+                </ul>
+            </nav>
+            <button class="cta-button">Mulai Belajar</button>
+        </div>
+    </header>
+
+    <section class="game-section">
+        <div class="container">
+            <h2 class="section-title">Game Mencocokkan Istilah</h2>
+            <div class="game-container">
+                <div class="game-info">
+                    <div class="info-item">
+                        <div class="info-label">Skor</div>
+                        <div class="info-value" id="score">0</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Waktu</div>
+                        <div class="info-value timer" id="timer">120</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Pasangan</div>
+                        <div class="info-value" id="pairs">0/15</div>
+                    </div>
+                </div>
+                
+                <div class="matching-game">
+                    <div class="game-instructions">
+                        <p>Pilih istilah di kolom kiri dan cocokkan dengan pengertian yang tepat di kolom kanan!</p>
+                    </div>
+                    
+                    <div class="cards-container">
+                        <div class="terms-column">
+                            <div class="column-title">Istilah</div>
+                            <div class="term-card" data-term="file">File</div>
+                            <div class="term-card" data-term="folder">Folder</div>
+                            <div class="term-card" data-term="file-explorer">File Explorer</div>
+                            <div class="term-card" data-term="ekstensi">Ekstensi File</div>
+                            <div class="term-card" data-term="copy">Copy (Ctrl + C)</div>
+                            <div class="term-card" data-term="cut">Cut (Ctrl + X)</div>
+                            <div class="term-card" data-term="paste">Paste (Ctrl + V)</div>
+                            <div class="term-card" data-term="rename">Rename</div>
+                            <div class="term-card" data-term="delete">Delete</div>
+                            <div class="term-card" data-term="backup">Backup</div>
+                            <div class="term-card" data-term="organisasi">Organisasi Folder</div>
+                            <div class="term-card" data-term="recycle">Recycle Bin</div>
+                            <div class="term-card" data-term="search">Search Bar</div>
+                            <div class="term-card" data-term="properties">Properties</div>
+                            <div class="term-card" data-term="shortcut">Shortcut</div>
+                        </div>
+                        
+                        <div class="definitions-column">
+                            <div class="column-title">Pengertian</div>
+                            <div class="definition-card" data-term="file">Tempat menyimpan data seperti dokumen, gambar, atau video</div>
+                            <div class="definition-card" data-term="folder">Wadah yang menyimpan file atau folder lain</div>
+                            <div class="definition-card" data-term="file-explorer">Aplikasi di Windows untuk mengelola file dan folder</div>
+                            <div class="definition-card" data-term="ekstensi">Penanda jenis file, seperti .docx, .jpg, .mp4</div>
+                            <div class="definition-card" data-term="copy">Perintah untuk menyalin file atau folder</div>
+                            <div class="definition-card" data-term="cut">Perintah untuk memindahkan file atau folder</div>
+                            <div class="definition-card" data-term="paste">Perintah untuk menempelkan file atau folder yang disalin atau dipindahkan</div>
+                            <div class="definition-card" data-term="rename">Mengubah nama file atau folder</div>
+                            <div class="definition-card" data-term="delete">Menghapus file atau folder dari penyimpanan</div>
+                            <div class="definition-card" data-term="backup">Menyimpan salinan file penting ke tempat lain sebagai cadangan</div>
+                            <div class="definition-card" data-term="organisasi">Cara menyusun file dan folder agar mudah dicari</div>
+                            <div class="definition-card" data-term="recycle">Tempat penampungan sementara untuk file yang dihapus</div>
+                            <div class="definition-card" data-term="search">Fitur untuk mencari file atau folder di File Explorer</div>
+                            <div class="definition-card" data-term="properties">Menampilkan informasi detail tentang file atau folder (ukuran, jenis, tanggal, dsb.)</div>
+                            <div class="definition-card" data-term="shortcut">Jalan pintas untuk mengakses file atau folder tanpa membuka lokasi aslinya</div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-message" id="message"></div>
+                </div>
+                
+                <div class="game-controls">
+                    <button class="cta-button" id="start-btn">Mulai Game</button>
+                    <button class="cta-button" id="reset-btn">Reset</button>
+                </div>
+                
+                <div class="instructions">
+                    <h3>Cara Bermain:</h3>
+                    <ul>
+                        <li>Klik tombol "Mulai Game" untuk memulai permainan</li>
+                        <li>Pilih satu istilah di kolom kiri</li>
+                        <li>Kemudian pilih pengertian yang sesuai di kolom kanan</li>
+                        <li>Jika cocok, pasangan akan terkunci dan skor bertambah</li>
+                        <li>Selesaikan semua pasangan sebelum waktu habis!</li>
+                        <li>Dapatkan skor tinggi dengan cepat dan tepat!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FileFolderEdu</h3>
+                    <p>Platform pembelajaran interaktif untuk menguasai keterampilan mengelola file dan folder.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Navigasi</h3>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="materi.html">Materi</a></li>
+                        <li><a href="game.html">Game & Kuis</a></li>
+                        <li><a href="evaluasi.html">Evaluasi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontak</h3>
+                    <ul>
+                        <li>Email: revanahak@gmail.com</li>
+                        <li>Telepon: 081337503785</li>
+                        <li>Alamat: Kos Ijo Totty Kayu Putih Kupang</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 FileFolderReva. dibuat oleh Ana Maria Revalinda Nahak.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Game variables
+        let score = 0;
+        let timeLeft = 120;
+        let matchedPairs = 0;
+        let totalPairs = 15;
+        let gameActive = false;
+        let timerInterval;
+        let selectedTerm = null;
+        let selectedDefinition = null;
+        
+        // DOM elements
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const pairsElement = document.getElementById('pairs');
+        const messageElement = document.getElementById('message');
+        const startButton = document.getElementById('start-btn');
+        const resetButton = document.getElementById('reset-btn');
+        const termCards = document.querySelectorAll('.term-card');
+        const definitionCards = document.querySelectorAll('.definition-card');
+        
+        // Initialize floating particles
+        const body = document.body;
+        const particlesDiv = document.createElement('div');
+        particlesDiv.className = 'floating-particles';
+        for (let i = 0; i < 3; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particlesDiv.appendChild(particle);
+        }
+        body.insertBefore(particlesDiv, body.firstChild);
+        
+        // Shuffle definitions
+        function shuffleDefinitions() {
+            const definitionsContainer = document.querySelector('.definitions-column');
+            const definitionCards = Array.from(document.querySelectorAll('.definition-card'));
+            
+            // Remove all definition cards
+            definitionCards.forEach(card => card.remove());
+            
+            // Shuffle the array
+            for (let i = definitionCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [definitionCards[i], definitionCards[j]] = [definitionCards[j], definitionCards[i]];
+            }
+            
+            // Add column title back
+            const columnTitle = document.querySelector('.definitions-column .column-title');
+            
+            // Add shuffled cards back
+            definitionCards.forEach(card => {
+                definitionsContainer.appendChild(card);
+            });
+            
+            // Re-add event listeners
+            addCardEventListeners();
+        }
+        
+        // Add event listeners to cards
+        function addCardEventListeners() {
+            // Clear previous event listeners
+            termCards.forEach(card => {
+                card.replaceWith(card.cloneNode(true));
+            });
+            
+            definitionCards.forEach(card => {
+                card.replaceWith(card.cloneNode(true));
+            });
+            
+            // Get fresh references
+            const freshTermCards = document.querySelectorAll('.term-card');
+            const freshDefinitionCards = document.querySelectorAll('.definition-card');
+            
+            // Add click event to term cards
+            freshTermCards.forEach(card => {
+                if (!card.classList.contains('matched')) {
+                    card.addEventListener('click', handleTermClick);
+                }
+            });
+            
+            // Add click event to definition cards
+            freshDefinitionCards.forEach(card => {
+                if (!card.classList.contains('matched')) {
+                    card.addEventListener('click', handleDefinitionClick);
+                }
+            });
+        }
+        
+        // Handle term card click
+        function handleTermClick(e) {
+            if (!gameActive) return;
+            
+            const card = e.currentTarget;
+            
+            // If already selected, deselect it
+            if (card === selectedTerm) {
+                card.classList.remove('selected');
+                selectedTerm = null;
+                return;
+            }
+            
+            // Deselect previous selection
+            if (selectedTerm) {
+                selectedTerm.classList.remove('selected');
+            }
+            
+            // Select current card
+            card.classList.add('selected');
+            selectedTerm = card;
+            
+            // If we have both a term and definition selected, check for match
+            if (selectedTerm && selectedDefinition) {
+                checkMatch();
+            }
+        }
+        
+        // Handle definition card click
+        function handleDefinitionClick(e) {
+            if (!gameActive) return;
+            
+            const card = e.currentTarget;
+            
+            // If already selected, deselect it
+            if (card === selectedDefinition) {
+                card.classList.remove('selected');
+                selectedDefinition = null;
+                return;
+            }
+            
+            // Deselect previous selection
+            if (selectedDefinition) {
+                selectedDefinition.classList.remove('selected');
+            }
+            
+            // Select current card
+            card.classList.add('selected');
+            selectedDefinition = card;
+            
+            // If we have both a term and definition selected, check for match
+            if (selectedTerm && selectedDefinition) {
+                checkMatch();
+            }
+        }
+        
+        // Check if selected term and definition match
+        function checkMatch() {
+            const termType = selectedTerm.getAttribute('data-term');
+            const definitionType = selectedDefinition.getAttribute('data-term');
+            
+            if (termType === definitionType) {
+                // Match found
+                selectedTerm.classList.add('matched');
+                selectedDefinition.classList.add('matched');
+                selectedTerm.classList.remove('selected');
+                selectedDefinition.classList.remove('selected');
+                
+                updateScore(10);
+                matchedPairs++;
+                updatePairs();
+                
+                showMessage('Benar! Pasangan cocok.', 'success');
+                
+                // Check if game is complete
+                if (matchedPairs === totalPairs) {
+                    endGame(true);
+                }
+            } else {
+                // No match
+                showMessage('Salah! Coba lagi.', 'error');
+                updateScore(-2);
+                
+                // Deselect after a delay
+                setTimeout(() => {
+                    if (selectedTerm) selectedTerm.classList.remove('selected');
+                    if (selectedDefinition) selectedDefinition.classList.remove('selected');
+                    selectedTerm = null;
+                    selectedDefinition = null;
+                }, 1000);
+            }
+        }
+        
+        // Update score
+        function updateScore(points) {
+            score += points;
+            if (score < 0) score = 0;
+            scoreElement.textContent = score;
+        }
+        
+        // Update pairs count
+        function updatePairs() {
+            pairsElement.textContent = `${matchedPairs}/${totalPairs}`;
+        }
+        
+        // Show message
+        function showMessage(text, type) {
+            messageElement.textContent = text;
+            messageElement.className = `game-message ${type}`;
+            messageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Start game
+        function startGame() {
+            if (gameActive) return;
+            
+            gameActive = true;
+            score = 0;
+            timeLeft = 120;
+            matchedPairs = 0;
+            
+            scoreElement.textContent = score;
+            timerElement.textContent = timeLeft;
+            updatePairs();
+            
+            // Reset cards
+            termCards.forEach(card => {
+                card.classList.remove('selected', 'matched');
+            });
+            
+            definitionCards.forEach(card => {
+                card.classList.remove('selected', 'matched');
+            });
+            
+            // Shuffle definitions
+            shuffleDefinitions();
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+            
+            startButton.textContent = 'Game Berjalan...';
+            startButton.disabled = true;
+            
+            showMessage('Game dimulai! Cocokkan istilah dengan pengertian yang tepat.', 'success');
+        }
+        
+        // End game
+        function endGame(isWin) {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            if (isWin) {
+                const timeBonus = Math.floor(timeLeft * 0.5);
+                updateScore(timeBonus);
+                showMessage(`Selamat! Anda menang! Skor akhir: ${score} (Bonus waktu: +${timeBonus})`, 'success');
+            } else {
+                showMessage(`Waktu habis! Skor akhir: ${score}`, 'error');
+            }
+            
+            startButton.textContent = 'Mulai Lagi';
+            startButton.disabled = false;
+        }
+        
+        // Reset game
+        function resetGame() {
+            if (gameActive) {
+                clearInterval(timerInterval);
+            }
+            
+            gameActive = false;
+            score = 0;
+            timeLeft = 120;
+            matchedPairs = 0;
+            selectedTerm = null;
+            selectedDefinition = null;
+            
+            scoreElement.textContent = score;
+            timerElement.textContent = timeLeft;
+            updatePairs();
+            
+            // Reset cards
+            termCards.forEach(card => {
+                card.classList.remove('selected', 'matched');
+            });
+            
+            definitionCards.forEach(card => {
+                card.classList.remove('selected', 'matched');
+            });
+            
+            messageElement.style.display = 'none';
+            
+            startButton.textContent = 'Mulai Game';
+            startButton.disabled = false;
+            
+            // Re-shuffle definitions
+            shuffleDefinitions();
+        }
+        
+        // Event listeners
+        startButton.addEventListener('click', startGame);
+        resetButton.addEventListener('click', resetGame);
+        
+        // CTA button effect
+        document.querySelectorAll('.cta-button').forEach(button => {
+            if (button.id !== 'start-btn' && button.id !== 'reset-btn') {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+                    setTimeout(() => {
+                        alert('Terima kasih! Anda akan diarahkan ke halaman pembelajaran.');
+                    }, 300);
+                });
+            }
+        });
+        
+        // Initialize the game
+        shuffleDefinitions();
+    </script>
+</body>
+</html>
